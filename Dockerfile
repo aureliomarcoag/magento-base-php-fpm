@@ -20,5 +20,6 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"
     
-RUN adduser -D -u 1212 -G www-data magento
+RUN addgroup web -g 1212
+RUN adduser -D -u 1212 -G web -s /bin/sh magento
 USER magento
