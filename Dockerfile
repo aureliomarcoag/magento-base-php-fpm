@@ -12,7 +12,8 @@ RUN apk add \
     libpng-dev \
     icu-dev \
     xmlrpc-c-dev \
-    && docker-php-ext-install bcmath gd intl pdo_mysql soap hash opcache
+    libxslt-dev \
+    && docker-php-ext-install bcmath gd intl pdo_mysql soap hash opcache xsl zip
 
 RUN docker-php-ext-install opcache
 
