@@ -24,8 +24,9 @@ RUN docker-php-ext-install opcache
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"
-    
-RUN find /etc/php* -name php.ini -exec sed -i 's/memory_limit.*/memory_limit = -1/g' {} \;
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+RUN find "$PHP_INI_DIR" -name php.ini -exec sed -i 's/memory_limit.*/memory_limit = -1/g' {} \;
 
 RUN addgroup web -g 1212
 RUN adduser -D -u 1212 -G web -s /bin/sh magento
