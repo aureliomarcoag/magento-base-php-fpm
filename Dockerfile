@@ -13,7 +13,11 @@ RUN apk add \
     icu-dev \
     xmlrpc-c-dev \
     libxslt-dev \
-    && docker-php-ext-install bcmath gd intl pdo_mysql soap hash opcache xsl zip
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-install bcmath gd intl pdo_mysql soap hash opcache xsl zip \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 
 RUN docker-php-ext-install opcache
 
