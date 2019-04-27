@@ -18,6 +18,9 @@
 # SESSION_SAVE_REDIS_MAX_CONCURRENCY: 12
 # CACHE_BACKEND: Cm_Cache_Backend_Redis
 # PAGE_CACHE: Cm_Cache_Backend_Redis
+
+if [ "${SKIP_MAGENTO_COMMANDS}" == "true" ]; then
+
 php /var/www/bin/magento setup:config:set \
     --backend-frontname="$BACKEND_FRONTNAME" \
     --key="${KEY}" \
@@ -55,6 +58,8 @@ php /var/www/bin/magento setup:config:set \
     --page-cache-redis-compress-data="${PAGE_CACHE_REDIS_COMPRESS_DATA}"
 
 php /var/www/bin/magento deploy:mode:set --skip-compilation "$MAGE_MODE"
+
+fi
 
 # If either PHP or Nginx dies, the container exits
 php-fpm -F &
