@@ -14,6 +14,7 @@ RUN apt-get update --no-install-recommends \
     procps \
     nginx \
     && rm -rf /var/lib/apt/lists/* \
+    && rm -Rf /etc/nginx \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install bcmath gd intl pdo_mysql soap hash opcache xsl zip \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -27,7 +28,7 @@ RUN apt-get update --no-install-recommends \
     && groupadd web -g 1212 \
     && useradd -m -u 1212 -g web -s /bin/bash magento
 
-COPY nginx/* /etc/nginx/
+COPY nginx /etc/nginx
 COPY fpm.conf /usr/local/etc/php-fpm.d/
 COPY magento /var/www
 COPY entrypoint.sh /entrypoint.sh
