@@ -19,47 +19,148 @@
 # CACHE_BACKEND: Cm_Cache_Backend_Redis
 # PAGE_CACHE: Cm_Cache_Backend_Redis
 
-if [ "${SKIP_MAGENTO_COMMANDS}" == "true" ]; then
+cat<<EOF > /var/www/app/etc/env.php
+<?php
+return array (
+  'backend' => 
+  array (
+    'frontName' => '${BACKEND_FRONTNAME:-admin}',
+  ),
+  'db' => 
+  array (
+    'connection' => 
+    array (
+      'default' => 
+      array (
+        'host' => '${DB_HOST}',
+        'dbname' => '${DB_NAME}',
+        'username' => '${DB_USER}',
+        'password' => '${DB_PASSWORD}',
+        'model' => 'mysql4',
+        'engine' => 'innodb',
+        'initStatements' => 'SET NAMES utf8;',
+        'active' => '1',
+      ),
+      'indexer' => 
+      array (
+        'host' => '${DB_HOST}',
+        'dbname' => '${DB_NAME}',
+        'username' => '${DB_USER}',
+        'password' => '${DB_PASSWORD}',
+        'active' => '1',
+        'persistent' => NULL,
+      ),
+    ),
+    'table_prefix' => '',
+  ),
+  'crypt' => 
+  array (
+    'key' => '${KEY}',
+  ),
+  'resource' => 
+  array (
+    'default_setup' => 
+    array (
+      'connection' => 'default',
+    )
+  ),
+  'x-frame-options' => 'SAMEORIGIN',
+  'MAGE_MODE' => 'production',
+  'session' => 
+  array (
+    'save' => 'redis',
+    'redis' => 
+    array (
+      'host' => '${SESSION_SAVE_REDIS_HOST}',
+      'port' => '${SESSION_SAVE_REDIS_PORT:-6379}',
+      'password' => '',
+      'timeout' => '${SESSION_SAVE_REDIS_TIMEOUT:-10}',
+      'persistent_identifier' => '${SESSION_SAVE_REDIS_PERSISTENT_ID:-}',
+      'database' => '${SESSION_SAVE_REDIS_DB:-1}',
+      'compression_threshold' => '2048',
+      'compression_library' => '${SESSION_SAVE_REDIS_COMPRESSION_LIB:-gzip}',
+      'log_level' => '${SESSION_SAVE_REDIS_LOG_LEVEL:-1}',
+      'max_concurrency' => '${SESSION_SAVE_REDIS_MAX_CONCURRENCY:-12}',
+      'break_after_frontend' => '5',
+      'break_after_adminhtml' => '30',
+      'first_lifetime' => '600',
+      'bot_first_lifetime' => '60',
+      'bot_lifetime' => '7200',
+      'disable_locking' => '0',
+      'min_lifetime' => '60',
+      'max_lifetime' => '2592000',
+    ),
+  ),
+  'cache_types' => 
+  array (
+    'config' => 1,
+    'layout' => 1,
+    'block_html' => 1,
+    'collections' => 1,
+    'reflection' => 1,
+    'db_ddl' => 1,
+    'eav' => 1,
+    'customer_notification' => 1,
+    'target_rule' => 1,
+    'full_page' => 1,
+    'config_integration' => 1,
+    'config_integration_api' => 1,
+    'config_webservice' => 1,
+    'translate' => 1,
+    'vertex' => 1
+  ),
+  'cache' => 
+  array (
+    'frontend' => 
+    array (
+      'default' => 
+      array (
+        'backend' => 'Cm_Cache_Backend_Redis',
+        'backend_options' => 
+        array (
+          'server' => '${CACHE_BACKEND_REDIS_SERVER}',
+          'port' => '${CACHE_BACKEND_REDIS_PORT}',
+          'database' => '${CACHE_BACKEND_REDIS_DB}',
+          'persistent' => '',
+          'force_standalone' => '0',
+          'connect_retries' => '3',
+          'read_timeout' => '10',
+          'automatic_cleaning_factor' => '0',
+          'compress_data' => '1',
+          'compress_tags' => '0',
+          'compress_threshold' => '20480',
+          'compression_lib' => 'gzip',
+          'disable_locking' => '0',
+        ),
+      ),
+      'page_cache' => 
+      array (
+        'backend' => 'Cm_Cache_Backend_Redis',
+        'backend_options' => 
+        array (
+          'server' => '${PAGE_CACHE_REDIS_SERVER}',
+          'port' => '${PAGE_CACHE_REDIS_PORT}',
+          'database' => '${PAGE_CACHE_REDIS_DB}',
+          'persistent' => '',
+          'force_standalone' => '0',
+          'connect_retries' => '3',
+          'read_timeout' => '10',
+          'automatic_cleaning_factor' => '0',
+          'compress_data' => '1',
+          'compress_tags' => '0',
+          'compress_threshold' => '20480',
+          'compression_lib' => 'gzip',
+          'disable_locking' => '0',
+        ),
+      ),
+    ),
+  ),
+);
 
-php /var/www/bin/magento setup:config:set \
-    --backend-frontname="$BACKEND_FRONTNAME" \
-    --key="${KEY}" \
-    --amqp-host="$AMQP_HOST" \
-    --amqp-port="$AMQP_PORT" \
-    --amqp-user="$AMQP_USER" \
-    --amqp-password="$AMQP_PASSWORD" \
-    --amqp-virtualhost="${AMQP_VIRTUALHOST:-/}" \
-    --amqp-ssl="${AMQP_SSL:-}" \
-    --amqp-ssl-options="${AMQP_SSL_OPTIONS:-}" \
-    --db-host="$DB_HOST" \
-    --db-name="$DB_NAME" \
-    --db-user="$DB_USER" \
-    --db-engine="${DB_ENGINE:-innodb}" \
-    --db-password="$DB_PASSWORD" \
-    --db-prefix="${DB_PREFIX:-}" \
-    --db-model="$DB_MODEL:-mysql4" \
-    --session-save="${SESSION_SAVE}"
-    --session-save-redis-host="${SESSION_SAVE_REDIS_HOST}"
-    --session-save-redis-port="${SESSION_SAVE_REDIS_PORT}"
-    --session-save-redis-timeout="${SESSION_SAVE_REDIS_TIMEOUT:-10}"
-    --session-save-redis-persistent-id="${SESSION_SAVE_REDIS_PERSISTENT_ID:-}"
-    --session-save-redis-db="${SESSION_SAVE_REDIS_DB:-1}"
-    --session-save-redis-compression-lib="${SESSION_SAVE_REDIS_COMPRESSION_LIB:-gzip}"
-    --session-save-redis-log-level="${SESSION_SAVE_REDIS_LOG_LEVEL:-0}"
-    --session-save-redis-max-concurrency="${SESSION_SAVE_REDIS_MAX_CONCURRENCY:-12}"
-    --cache-backend="${CACHE_BACKEND:-Cm_Cache_Backend_Redis}"
-    --cache-backend-redis-server="${CACHE_BACKEND_REDIS_SERVER}"
-    --cache-backend-redis-db="${CACHE_BACKEND_REDIS_DB}"
-    --cache-backend-redis-port="${CACHE_BACKEND_REDIS_PORT}"
-    --page-cache="${PAGE_CACHE:-Cm_Cache_Backend_Redis}"
-    --page-cache-redis-server="${PAGE_CACHE_REDIS_SERVER}"
-    --page-cache-redis-db="${PAGE_CACHE_REDIS_DB}"
-    --page-cache-redis-port="${PAGE_CACHE_REDIS_PORT}"
-    --page-cache-redis-compress-data="${PAGE_CACHE_REDIS_COMPRESS_DATA}"
+EOF
 
+php /var/www/bin/magento cache:enable
 php /var/www/bin/magento deploy:mode:set --skip-compilation "$MAGE_MODE"
-
-fi
 
 # If either PHP or Nginx dies, the container exits
 php-fpm -F &
