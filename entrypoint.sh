@@ -155,6 +155,10 @@ return array (
       ),
     ),
   ),
+  'install' => 
+  array (
+    'date' => 'Thu, 01 Jan 1970 00:00:00 +0000',
+  ),
 );
 
 EOF
