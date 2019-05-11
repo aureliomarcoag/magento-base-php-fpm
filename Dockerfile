@@ -13,6 +13,7 @@ RUN apt-get update --no-install-recommends \
     git \
     procps \
     nginx \
+    curl \
     && rm -rf /var/lib/apt/lists/* \
     && rm -Rf /etc/nginx \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
