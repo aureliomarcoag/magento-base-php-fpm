@@ -173,7 +173,7 @@ nginx -g "daemon off;" &
 nginx_pid=$!
 
 if [ "$1" == "--run-cron" ] ; then
-    php /var/www/bin/magento cron:run
+    su magento -c "php /var/www/bin/magento cron:run"
     exit $?
 fi
 
