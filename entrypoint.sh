@@ -172,6 +172,11 @@ fpm_pid=$!
 nginx -g "daemon off;" &
 nginx_pid=$!
 
+if [ "$1" == "--run-cron" ] ; then
+    php /var/www/bin/magento cron:run
+    exit $?
+fi
+
 while [ -d /proc/$fpm_pid ] && [ -d /proc/$nginx_pid ] ; do
     sleep 1
 done
