@@ -155,6 +155,11 @@ return array (
       ),
     ),
   ),
+  'http_cache_hosts' => [
+    [
+      'host' => '${VARNISH_HOST}'
+    ]
+  ],
   'install' => 
   array (
     'date' => 'Thu, 01 Jan 1970 00:00:00 +0000',
